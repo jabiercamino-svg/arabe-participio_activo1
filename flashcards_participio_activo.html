@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Flashcards Árabe – Participio Activo</title>
+  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Lato', sans-serif;
+      background: #1c1008;
+      color: #f0e8d8;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 36px 20px 48px;
+    }
+
+    h1 {
+      font-family: 'Arial Unicode MS', 'Arial', sans-serif;
+      font-size: 44px;
+      font-weight: 700;
+      color: #e8916a;
+      letter-spacing: 1px;
+      text-align: center;
+      margin-bottom: 2px;
+      direction: rtl;
+    }
+
+    .subtitle {
+      font-size: 13px;
+      font-weight: 300;
+      color: #5a4030;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      text-align: center;
+      margin-bottom: 12px;
+    }
+
+    .category-tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: center;
+      margin-bottom: 24px;
+      max-width: 720px;
+    }
+
+    .tab {
+      font-family: 'Lato', sans-serif;
+      font-size: 12px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      padding: 6px 16px;
+      border-radius: 20px;
+      border: 1px solid #3a2010;
+      background: transparent;
+      color: #5a4030;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .tab:hover { border-color: #e8916a; color: #e8916a; }
+
+    .tab.active {
+      background: #e8916a;
+      color: #1c1008;
+      border-color: #e8916a;
+      font-weight: 700;
+    }
+
+    .search-wrap {
+      width: 100%;
+      max-width: 480px;
+      margin-bottom: 24px;
+    }
+
+    .search-wrap input {
+      width: 100%;
+      padding: 12px 18px;
+      border-radius: 30px;
+      border: 1px solid #3a2010;
+      background: #100a04;
+      color: #f0e8d8;
+      font-size: 15px;
+      font-family: 'Lato', sans-serif;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .search-wrap input::placeholder { color: #3a2010; }
+    .search-wrap input:focus { border-color: #e8916a; }
+
+    .controls {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      margin-bottom: 32px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      font-family: 'Lato', sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      padding: 10px 28px;
+      border-radius: 30px;
+      border: 1px solid #3a2010;
+      background: transparent;
+      color: #f0e8d8;
+      cursor: pointer;
+      transition: background 0.2s, border-color 0.2s, color 0.2s, transform 0.1s;
+    }
+
+    .btn:hover {
+      background: #2a1508;
+      border-color: #e8916a;
+      color: #e8916a;
+    }
+
+    .btn:active { transform: scale(0.97); }
+
+    .btn.active {
+      background: #e8916a;
+      color: #1c1008;
+      border-color: #e8916a;
+    }
+
+    .card-wrap {
+      width: 100%;
+      max-width: 620px;
+      height: 380px;
+      perspective: 1200px;
+      cursor: pointer;
+    }
+
+    .card-inner {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      transform-style: preserve-3d;
+      transition: transform 0.6s cubic-bezier(.4,0,.2,1);
+    }
+
+    .card-inner.flipped { transform: rotateY(180deg); }
+
+    .face {
+      position: absolute;
+      inset: 0;
+      border-radius: 20px;
+      backface-visibility: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 36px;
+      text-align: center;
+    }
+
+    .face.front {
+      background: #100a04;
+      border: 1px solid #3a2010;
+    }
+
+    .face.back {
+      background: #241208;
+      border: 1px solid #e8916a;
+      transform: rotateY(180deg);
+    }
+
+    /* FRONT */
+    .category-label {
+      font-size: 11px;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: #5a4030;
+      padding: 4px 14px;
+      border: 1px solid #3a2010;
+      border-radius: 20px;
+    }
+
+    .arabic-participle {
+      font-family: 'Arial Unicode MS', 'Arial', sans-serif;
+      font-size: 64px;
+      direction: rtl;
+      color: #e8916a;
+      line-height: 1.3;
+    }
+
+    .root-block {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+      padding: 8px 20px;
+      border-top: 1px solid #3a2010;
+      margin-top: 4px;
+    }
+
+    .root-label {
+      font-size: 10px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #4a3020;
+    }
+
+    .arabic-root {
+      font-family: 'Arial Unicode MS', 'Arial', sans-serif;
+      font-size: 30px;
+      direction: rtl;
+      color: #c8784a;
+      line-height: 1.3;
+    }
+
+    .hint {
+      font-size: 12px;
+      color: #3a2010;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    /* BACK */
+    .back-participle-ar {
+      font-family: 'Arial Unicode MS', 'Arial', sans-serif;
+      font-size: 46px;
+      direction: rtl;
+      color: #e8916a;
+      line-height: 1.3;
+    }
+
+    .back-roman-participle {
+      font-size: 22px;
+      font-style: italic;
+      color: #c87858;
+      font-weight: 300;
+    }
+
+    .back-meaning-participle {
+      font-size: 24px;
+      font-weight: 700;
+      color: #f0e8d8;
+    }
+
+    .back-divider {
+      width: 60px;
+      height: 1px;
+      background: #3a2010;
+      margin: 4px 0;
+    }
+
+    .back-root-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .back-root-ar {
+      font-family: 'Arial Unicode MS', 'Arial', sans-serif;
+      font-size: 26px;
+      direction: rtl;
+      color: #a86840;
+    }
+
+    .back-root-roman {
+      font-size: 16px;
+      font-style: italic;
+      color: #7a5030;
+    }
+
+    .back-root-meaning {
+      font-size: 16px;
+      color: #a08060;
+    }
+
+    .back-root-label {
+      font-size: 10px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #4a3020;
+    }
+
+    .help {
+      margin-top: 20px;
+      font-size: 11px;
+      color: #3a2010;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      text-align: center;
+    }
+
+    .no-results { font-size: 16px; color: #3a2010; }
+
+    @media (max-width: 500px) {
+      .arabic-participle { font-size: 46px; }
+      .back-participle-ar { font-size: 34px; }
+      .card-wrap { height: 340px; }
+      h1 { font-size: 30px; }
+    }
+  </style>
+</head>
+<body>
+
+  <h1>اسم الفاعل</h1>
+  <div class="subtitle">Flashcards · Participio Activo árabe</div>
+
+  <div class="category-tabs" id="tabs"></div>
+
+  <div class="search-wrap">
+    <input type="text" id="search" placeholder="Buscar: comiendo, sabiendo, yendo..." oninput="filterCards()">
+  </div>
+
+  <div class="controls">
+    <button class="btn" onclick="prevCard()">⬅ Anterior</button>
+    <button class="btn" onclick="flipCard()">🔄 Girar</button>
+    <button class="btn" onclick="nextCard()">Siguiente ➡</button>
+    <button class="btn" id="randomBtn" onclick="toggleRandom()">🔀 Aleatorio: NO</button>
+    <button class="btn" onclick="shuffleCards()">⇄ Mezclar</button>
+  </div>
+
+  <div class="card-wrap" onclick="flipCard()">
+    <div class="card-inner" id="card-inner">
+      <div class="face front" id="front"></div>
+      <div class="face back" id="back"></div>
+    </div>
+  </div>
+
+  <div class="help">espacio = girar · ← → = navegar</div>
+
+  <script>
+    const cards = [
+      // Comunicación
+      { participle: 'قَائِل',    pRoman: 'qāʾil',       pMeaning: 'el que dice / diciendo',        root: 'قَالَ',    rRoman: 'qāla',       rMeaning: 'decir',        category: 'Comunicación' },
+      { participle: 'مُتَكَلِّم', pRoman: 'mutakallim',  pMeaning: 'el que habla / hablando',       root: 'تَكَلَّمَ', rRoman: 'takallama',  rMeaning: 'hablar',       category: 'Comunicación' },
+      { participle: 'سَائِل',    pRoman: 'sāʾil',       pMeaning: 'el que pregunta / preguntando', root: 'سَأَلَ',   rRoman: 'saʾala',     rMeaning: 'preguntar',    category: 'Comunicación' },
+      { participle: 'مُجِيب',    pRoman: 'mujīb',       pMeaning: 'el que responde / respondiendo',root: 'أَجَابَ',  rRoman: 'ajāba',      rMeaning: 'responder',    category: 'Comunicación' },
+      { participle: 'كَاتِب',    pRoman: 'kātib',       pMeaning: 'el que escribe / escribiendo',  root: 'كَتَبَ',   rRoman: 'kataba',     rMeaning: 'escribir',     category: 'Comunicación' },
+      { participle: 'قَارِئ',    pRoman: 'qāriʾ',       pMeaning: 'el que lee / leyendo',          root: 'قَرَأَ',   rRoman: 'qaraʾa',     rMeaning: 'leer',         category: 'Comunicación' },
+      { participle: 'سَامِع',    pRoman: 'sāmiʿ',       pMeaning: 'el que escucha / escuchando',   root: 'سَمِعَ',   rRoman: 'samiʿa',     rMeaning: 'escuchar',     category: 'Comunicación' },
+      { participle: 'نَاظِر',    pRoman: 'nāẓir',       pMeaning: 'el que mira / mirando',         root: 'نَظَرَ',   rRoman: 'naẓara',     rMeaning: 'mirar',        category: 'Comunicación' },
+
+      // Movimiento
+      { participle: 'ذَاهِب',    pRoman: 'dhāhib',      pMeaning: 'el que va / yendo',             root: 'ذَهَبَ',   rRoman: 'dhahaba',    rMeaning: 'ir',           category: 'Movimiento' },
+      { participle: 'جَاءٍ',     pRoman: 'jāʾin',       pMeaning: 'el que viene / viniendo',       root: 'جَاءَ',    rRoman: 'jāʾa',       rMeaning: 'venir',        category: 'Movimiento' },
+      { participle: 'رَاجِع',    pRoman: 'rājiʿ',       pMeaning: 'el que vuelve / volviendo',     root: 'رَجَعَ',   rRoman: 'rajaʿa',     rMeaning: 'volver',       category: 'Movimiento' },
+      { participle: 'مَاشٍ',     pRoman: 'māshin',      pMeaning: 'el que camina / caminando',     root: 'مَشَى',    rRoman: 'mashā',      rMeaning: 'caminar',      category: 'Movimiento' },
+      { participle: 'رَاكِض',    pRoman: 'rākiḍ',       pMeaning: 'el que corre / corriendo',      root: 'رَكَضَ',   rRoman: 'rakaḍa',     rMeaning: 'correr',       category: 'Movimiento' },
+      { participle: 'جَالِس',    pRoman: 'jālis',       pMeaning: 'el que está sentado',           root: 'جَلَسَ',   rRoman: 'jalasa',     rMeaning: 'sentarse',     category: 'Movimiento' },
+      { participle: 'وَاقِف',    pRoman: 'wāqif',       pMeaning: 'el que está de pie / parado',   root: 'وَقَفَ',   rRoman: 'waqafa',     rMeaning: 'pararse',      category: 'Movimiento' },
+      { participle: 'نَائِم',    pRoman: 'nāʾim',       pMeaning: 'el que duerme / durmiendo',     root: 'نَامَ',    rRoman: 'nāma',       rMeaning: 'dormir',       category: 'Movimiento' },
+      { participle: 'صَاعِد',    pRoman: 'ṣāʿid',       pMeaning: 'el que sube / subiendo',        root: 'صَعِدَ',   rRoman: 'ṣaʿida',     rMeaning: 'subir',        category: 'Movimiento' },
+      { participle: 'نَازِل',    pRoman: 'nāzil',       pMeaning: 'el que baja / bajando',         root: 'نَزَلَ',   rRoman: 'nazala',     rMeaning: 'bajar',        category: 'Movimiento' },
+
+      // Necesidades básicas
+      { participle: 'آكِل',      pRoman: 'ākil',        pMeaning: 'el que come / comiendo',        root: 'أَكَلَ',   rRoman: 'akala',      rMeaning: 'comer',        category: 'Necesidades' },
+      { participle: 'شَارِب',    pRoman: 'shārib',      pMeaning: 'el que bebe / bebiendo',        root: 'شَرِبَ',   rRoman: 'shariba',    rMeaning: 'beber',        category: 'Necesidades' },
+      { participle: 'لَابِس',    pRoman: 'lābis',       pMeaning: 'el que viste / vistiendo',      root: 'لَبِسَ',   rRoman: 'labisa',     rMeaning: 'vestirse',     category: 'Necesidades' },
+      { participle: 'حَامِل',    pRoman: 'ḥāmil',       pMeaning: 'el que lleva / llevando',       root: 'حَمَلَ',   rRoman: 'ḥamala',     rMeaning: 'llevar / cargar', category: 'Necesidades' },
+      { participle: 'فَاتِح',    pRoman: 'fātiḥ',       pMeaning: 'el que abre / abriendo',        root: 'فَتَحَ',   rRoman: 'fataḥa',     rMeaning: 'abrir',        category: 'Necesidades' },
+      { participle: 'غَاسِل',    pRoman: 'ghāsil',      pMeaning: 'el que lava / lavando',         root: 'غَسَلَ',   rRoman: 'ghasala',    rMeaning: 'lavar',        category: 'Necesidades' },
+      { participle: 'طَابِخ',    pRoman: 'ṭābikh',      pMeaning: 'el que cocina / cocinando',     root: 'طَبَخَ',   rRoman: 'ṭabakha',    rMeaning: 'cocinar',      category: 'Necesidades' },
+
+      // Trabajo / estudio
+      { participle: 'عَامِل',    pRoman: 'ʿāmil',       pMeaning: 'el que trabaja / trabajando',   root: 'عَمِلَ',   rRoman: 'ʿamila',     rMeaning: 'trabajar',     category: 'Trabajo' },
+      { participle: 'دَارِس',    pRoman: 'dāris',       pMeaning: 'el que estudia / estudiando',   root: 'دَرَسَ',   rRoman: 'darasa',     rMeaning: 'estudiar',     category: 'Trabajo' },
+      { participle: 'مُعَلِّم',  pRoman: 'muʿallim',    pMeaning: 'el que enseña / enseñando',     root: 'عَلَّمَ',  rRoman: 'ʿallama',    rMeaning: 'enseñar',      category: 'Trabajo' },
+      { participle: 'فَاهِم',    pRoman: 'fāhim',       pMeaning: 'el que entiende / entendiendo', root: 'فَهِمَ',   rRoman: 'fahima',     rMeaning: 'entender',     category: 'Trabajo' },
+      { participle: 'عَارِف',    pRoman: 'ʿārif',       pMeaning: 'el que sabe / conociendo',      root: 'عَرَفَ',   rRoman: 'ʿarafa',     rMeaning: 'saber / conocer', category: 'Trabajo' },
+      { participle: 'حَافِظ',    pRoman: 'ḥāfiẓ',       pMeaning: 'el que memoriza / memorizando', root: 'حَفِظَ',   rRoman: 'ḥafiẓa',     rMeaning: 'memorizar',    category: 'Trabajo' },
+      { participle: 'نَاجِح',    pRoman: 'nājiḥ',       pMeaning: 'el que tiene éxito / triunfando', root: 'نَجَحَ', rRoman: 'najaḥa',     rMeaning: 'tener éxito',  category: 'Trabajo' },
+      { participle: 'رَاسِب',    pRoman: 'rāsib',       pMeaning: 'el que suspende / suspendiendo',root: 'رَسَبَ',   rRoman: 'rasaba',     rMeaning: 'suspender',    category: 'Trabajo' },
+
+      // Sentimientos / estado
+      { participle: 'حَاسِس',    pRoman: 'ḥāsis',       pMeaning: 'el que siente / sintiendo',     root: 'حَسَّ',    rRoman: 'ḥassa',      rMeaning: 'sentir',       category: 'Sentimientos' },
+      { participle: 'مُحِبّ',    pRoman: 'muḥibb',      pMeaning: 'el que ama / amando',           root: 'أَحَبَّ',  rRoman: 'aḥabba',     rMeaning: 'amar / querer', category: 'Sentimientos' },
+      { participle: 'كَارِه',    pRoman: 'kārih',       pMeaning: 'el que odia / odiando',         root: 'كَرِهَ',   rRoman: 'kariha',     rMeaning: 'odiar',        category: 'Sentimientos' },
+      { participle: 'خَائِف',    pRoman: 'khāʾif',      pMeaning: 'el que teme / temiendo',        root: 'خَافَ',    rRoman: 'khāfa',      rMeaning: 'tener miedo',  category: 'Sentimientos' },
+      { participle: 'فَرِح',     pRoman: 'fariḥ',       pMeaning: 'el que se alegra / alegrándose',root: 'فَرِحَ',   rRoman: 'fariḥa',     rMeaning: 'alegrarse',    category: 'Sentimientos' },
+      { participle: 'حَازِن',    pRoman: 'ḥāzin',       pMeaning: 'el que se entristece',          root: 'حَزِنَ',   rRoman: 'ḥazina',     rMeaning: 'entristecerse', category: 'Sentimientos' },
+      { participle: 'رَاضٍ',     pRoman: 'rāḍin',       pMeaning: 'el que está satisfecho',        root: 'رَضِيَ',   rRoman: 'raḍiya',     rMeaning: 'estar satisfecho', category: 'Sentimientos' },
+      { participle: 'ضَاحِك',    pRoman: 'ḍāḥik',       pMeaning: 'el que ríe / riendo',           root: 'ضَحِكَ',   rRoman: 'ḍaḥika',     rMeaning: 'reír',         category: 'Sentimientos' },
+      { participle: 'بَاكٍ',     pRoman: 'bākin',       pMeaning: 'el que llora / llorando',       root: 'بَكَى',    rRoman: 'bakā',       rMeaning: 'llorar',       category: 'Sentimientos' },
+
+      // Posesión / existencia
+      { participle: 'مَالِك',    pRoman: 'mālik',       pMeaning: 'el que posee / poseedor',       root: 'مَلَكَ',   rRoman: 'malaka',     rMeaning: 'poseer',       category: 'Posesión' },
+      { participle: 'آخِذ',      pRoman: 'ākhidh',      pMeaning: 'el que toma / tomando',         root: 'أَخَذَ',   rRoman: 'akhadha',    rMeaning: 'tomar / coger', category: 'Posesión' },
+      { participle: 'تَارِك',    pRoman: 'tārik',       pMeaning: 'el que deja / dejando',         root: 'تَرَكَ',   rRoman: 'taraka',     rMeaning: 'dejar',        category: 'Posesión' },
+      { participle: 'بَائِع',    pRoman: 'bāʾiʿ',       pMeaning: 'el que vende / vendiendo',      root: 'بَاعَ',    rRoman: 'bāʿa',       rMeaning: 'vender',       category: 'Posesión' },
+      { participle: 'شَارٍ',     pRoman: 'shārin',      pMeaning: 'el que compra / comprando',     root: 'اشْتَرَى', rRoman: 'ishtarā',    rMeaning: 'comprar',      category: 'Posesión' },
+      { participle: 'دَافِع',    pRoman: 'dāfiʿ',       pMeaning: 'el que paga / pagando',         root: 'دَفَعَ',   rRoman: 'dafaʿa',     rMeaning: 'pagar',        category: 'Posesión' },
+
+      // Percepción / pensamiento
+      { participle: 'ظَانّ',     pRoman: 'ẓānn',        pMeaning: 'el que cree / pensando',        root: 'ظَنَّ',    rRoman: 'ẓanna',      rMeaning: 'creer / pensar', category: 'Pensamiento' },
+      { participle: 'عَالِم',    pRoman: 'ʿālim',       pMeaning: 'el que sabe / sabio',           root: 'عَلِمَ',   rRoman: 'ʿalima',     rMeaning: 'saber',        category: 'Pensamiento' },
+      { participle: 'نَاسٍ',     pRoman: 'nāsin',       pMeaning: 'el que olvida / olvidando',     root: 'نَسِيَ',   rRoman: 'nasiya',     rMeaning: 'olvidar',      category: 'Pensamiento' },
+      { participle: 'ذَاكِر',    pRoman: 'dhākir',      pMeaning: 'el que recuerda / recordando',  root: 'ذَكَرَ',   rRoman: 'dhakara',    rMeaning: 'recordar',     category: 'Pensamiento' },
+      { participle: 'مُفَكِّر',  pRoman: 'mufakkir',    pMeaning: 'el que piensa / pensando',      root: 'فَكَّرَ',  rRoman: 'fakkara',    rMeaning: 'pensar / reflexionar', category: 'Pensamiento' },
+      { participle: 'حَاسِب',    pRoman: 'ḥāsib',       pMeaning: 'el que calcula / calculando',   root: 'حَسَبَ',   rRoman: 'ḥasaba',     rMeaning: 'calcular',     category: 'Pensamiento' },
+    ];
+
+    const categories = ['Todas', ...new Set(cards.map(a => a.category))];
+    let activeCategory = 'Todas';
+
+    const tabsEl = document.getElementById('tabs');
+    categories.forEach(cat => {
+      const btn = document.createElement('button');
+      btn.className = 'tab' + (cat === 'Todas' ? ' active' : '');
+      btn.textContent = cat;
+      btn.onclick = () => selectCategory(cat);
+      tabsEl.appendChild(btn);
+    });
+
+    function selectCategory(cat) {
+      activeCategory = cat;
+      document.querySelectorAll('.tab').forEach(t => {
+        t.classList.toggle('active', t.textContent === cat);
+      });
+      document.getElementById('search').value = '';
+      applyFilter();
+    }
+
+    let filteredCards = [];
+    let current = 0;
+    let randomMode = false;
+
+    function applyFilter() {
+      const query = document.getElementById('search').value.toLowerCase();
+      filteredCards = cards.filter(a => {
+        const matchCat = activeCategory === 'Todas' || a.category === activeCategory;
+        const matchSearch = !query ||
+          a.pMeaning.toLowerCase().includes(query) ||
+          a.rMeaning.toLowerCase().includes(query) ||
+          a.participle.includes(query) ||
+          a.root.includes(query) ||
+          a.pRoman.toLowerCase().includes(query) ||
+          a.rRoman.toLowerCase().includes(query);
+        return matchCat && matchSearch;
+      });
+      current = 0;
+      renderCard();
+    }
+
+    function filterCards() { applyFilter(); }
+
+    function renderCard() {
+      const frontEl = document.getElementById('front');
+      const backEl  = document.getElementById('back');
+      document.getElementById('card-inner').classList.remove('flipped');
+
+      if (!filteredCards.length) {
+        frontEl.innerHTML = '<div class="no-results">Sin resultados</div>';
+        backEl.innerHTML = '';
+        return;
+      }
+
+      const c = filteredCards[current];
+
+      frontEl.innerHTML = `
+        <div class="category-label">${c.category}</div>
+        <div class="arabic-participle">${c.participle}</div>
+        <div class="root-block">
+          <div class="root-label">verbo raíz</div>
+          <div class="arabic-root">${c.root}</div>
+        </div>
+        <div class="hint">toca para ver la respuesta</div>
+      `;
+
+      backEl.innerHTML = `
+        <div class="back-participle-ar">${c.participle}</div>
+        <div class="back-roman-participle">${c.pRoman}</div>
+        <div class="back-meaning-participle">${c.pMeaning}</div>
+        <div class="back-divider"></div>
+        <div class="back-root-label">verbo raíz</div>
+        <div class="back-root-row">
+          <div class="back-root-ar">${c.root}</div>
+          <div class="back-root-roman">${c.rRoman}</div>
+        </div>
+        <div class="back-root-meaning">${c.rMeaning}</div>
+      `;
+    }
+
+    function flipCard() {
+      document.getElementById('card-inner').classList.toggle('flipped');
+    }
+
+    function nextCard() {
+      if (!filteredCards.length) return;
+      current = randomMode
+        ? Math.floor(Math.random() * filteredCards.length)
+        : (current + 1) % filteredCards.length;
+      renderCard();
+    }
+
+    function prevCard() {
+      if (!filteredCards.length) return;
+      current = randomMode
+        ? Math.floor(Math.random() * filteredCards.length)
+        : (current - 1 + filteredCards.length) % filteredCards.length;
+      renderCard();
+    }
+
+    function shuffleCards() {
+      for (let i = filteredCards.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [filteredCards[i], filteredCards[j]] = [filteredCards[j], filteredCards[i]];
+      }
+      current = 0;
+      renderCard();
+    }
+
+    function toggleRandom() {
+      randomMode = !randomMode;
+      const btn = document.getElementById('randomBtn');
+      btn.textContent = `🔀 Aleatorio: ${randomMode ? 'SÍ' : 'NO'}`;
+      btn.classList.toggle('active', randomMode);
+    }
+
+    document.addEventListener('keydown', e => {
+      if (e.code === 'Space') { e.preventDefault(); flipCard(); }
+      if (e.key === 'ArrowRight') nextCard();
+      if (e.key === 'ArrowLeft') prevCard();
+    });
+
+    applyFilter();
+  </script>
+
+</body>
+</html>
